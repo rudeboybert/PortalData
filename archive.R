@@ -19,18 +19,33 @@ git2r::config(repo,
 # Check the most recent commit for version instructions 
 last_commit <- git2r::commits(repo)[[1]]
 current_ver <- semver::parse_version(readLines("version.txt"))
+
+warning("Summary of last commit was: \n", last_commit['summary'])
+
 if (grepl("Merge pull request", last_commit['summary'])){
-  last_commit <- git2r::commits(repo)[[2]]
+    last_commit <- git2r::commits(repo)[[2]]
+    warning("Last commit was identified as a pull request, using next to last commit instead.")
+    warning("Summary of last commit was: \n", last_commit['summary'])
 }
 
 if (grepl("\\[no version bump\\]", last_commit['summary'])) {
-  new_ver <- current_ver
+    warning("Last commit was identified as [no version bump]")
+    new_ver <- current_ver
 } else if (grepl("\\[major\\]", last_commit['summary'])) {
-  new_ver <- semver::increment_version(current_ver, "major", 1L)
+    warning("Last commit was identified as [major]")
+    new_ver <- semver::increment_version(current_ver, "major", 1L)
 } else if (grepl("\\[patch\\]", last_commit['summary'])) {
-  new_ver <- semver::increment_version(current_ver, "patch", 1L)
+    warning("Last commit was identified as [patch]")
+    new_ver <- semver::increment_version(current_ver, "patch", 1L)
 } else {
-  new_ver <- semver::increment_version(current_ver, "minor", 1L)
+    warning("Last commit was identified as [minor]")
+    new_ver <- semver::increment_version(current_ver, "minor", 1L)
+}
+
+warning("Current version is:\n", current_ver)
+if(exists("new_ver"))
+{
+    warning("New version is:\n", new_ver)
 }
 
 writeLines(as.character(new_ver), "version.txt")
