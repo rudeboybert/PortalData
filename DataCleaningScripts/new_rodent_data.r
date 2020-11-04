@@ -14,11 +14,18 @@ source('DataCleaningScripts/rodent_data_cleaning_functions.R')
 # New file to be checked
 ##############################################################################
 
-newperiod = '493'
-filepath = '~/Dropbox/Portal/PORTAL_primary_data/Rodent/Raw_data/New_data/'
+newperiod = '-494'
+filepath = file.path("C:", "Users", "pdumandan", "Dropbox", "Portal", "PORTAL_primary_data", "Rodent", "Raw_data", "New_data", "")
 
-newfile = paste(filepath, 'newdat', newperiod, '.xlsx', sep = '')
-scannerfile = paste(filepath, 'tag scans/tags', newperiod, '.txt', sep = '')
+newfile_name = paste('newdat', newperiod, '.xlsx', sep = '')
+
+newfile = file.path(filepath, newfile_name)
+newperiod <- "494"
+
+scannerfile_name <- paste("tags", newperiod, ".txt", sep = "")
+
+scannerfile <- file.path(filepath, "tag scans", scannerfile_name)
+
 
 ##############################################################################
 # 1. Compare double-entered data -- will return 'Worksheets identical' if versions match
@@ -103,7 +110,7 @@ if (nrow(records) > 0) {
   
 }
 
-rm(records)
+rm(records) 
 rm(speciesnorms)
 rm(this.sp)
 
